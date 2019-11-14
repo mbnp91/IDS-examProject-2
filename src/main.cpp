@@ -31,7 +31,7 @@ void setup()                                                //Setup function
   
 }
 
-
+// vigtig detalje
 
 
 void loop()                                                 //Loop function (runs aprox 60 times per second)
