@@ -3,11 +3,19 @@
 #include <drone.h>
 #include <joystick.h>
 
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+
+
 String ssid = "TELLO-FE2F50";                               //Creating a string that is the SSID (The drones identity)
 String password = "";                                       //Creating the password which is nothing
 int JoystickButton = 15;                                    //button in pin 15
 int JoystickX = 34;                                         //x in pin 34
 int JoystickY = 35;                                         //y in pin 35
+
+
+
+LiquidCrystal_I2C lcd(0x27,16,2);
 
 Drone drone(ssid, password);                                //Making an instance of our drone class with the ssid and password as param
 Joystick joystick(JoystickButton, JoystickX, JoystickY);    //Making an instance of our joystick class with pinnumbers as our param (pins: btn, x, y)
@@ -16,6 +24,14 @@ void setup()                                                //Setup function
 {
   Serial.begin(9600);                                       //begins the serial connection at 9600 bits per second. The default setting on esp32 is the same              
   drone.joystick = &joystick;                               //& means - use this location                            
+
+
+  lcd.init();
+  lcd.backlight(); 
+  lcd.clear();   
+  lcd.setCursor(0,0);          // initialize the lcd 
+  lcd.print("Hello, ARDUINO ");  
+   
 
   for (size_t i = 0; i < 5; i++)                            //We make sure that the program has started running with a counter in the console                      
   {
@@ -36,6 +52,20 @@ void setup()                                                //Setup function
 
 void loop()                                                 //Loop function (runs aprox 60 times per second)
 {
+  /*
+  lcd.setBacklight(255);   
+  lcd.home ();                   // go home
+  lcd.clear();           // initialize the lcd 
+  lcd.print("Hello, ARDUINO ");  
+  */
+
+  lcd.init();
+  lcd.backlight(); 
+  lcd.clear();   
+  lcd.setCursor(0,0);          // initialize the lcd 
+  lcd.print("Hello, ARDUINO ");  
+
+ 
   joystick.loop();                                          //Running the loop function from our joystick class
   drone.loop();                                             //Running the loop function from our drone class
 }   
