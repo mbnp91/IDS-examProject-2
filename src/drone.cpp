@@ -26,23 +26,24 @@ void Drone::connect()
             delay(1000);
         }
     }
-    if(udp.listen(udpPort)) {
+
+    if(udp.listen(udpPort)) 
+    {
         this->myIp = WiFi.localIP().toString();
         Serial.print("UDP Listening on IP: ");
         Serial.println(WiFi.localIP());
       
-        udp.onPacket(
-            [this](AsyncUDPPacket packet) -> void
-            {
-                // make a string from the data
-                String s((char*)packet.data());
-                s = s.substring(0, packet.length()); 
-                s.trim();
-                // send string to method
-                this->commandResponse(s);
-            }
-        );
+        udp.onPacket([this](AsyncUDPPacket packet) -> void
+        {
+            // make a string from the data
+            String s((char*)packet.data());
+            s = s.substring(0, packet.length()); 
+            s.trim();
+            // send string to method
+            this->commandResponse(s);
+        });
     }
+
     this->sendCommand("command");
 }
 
@@ -111,8 +112,9 @@ void Drone::loop()
         lcd.backlight(); 
         lcd.clear();   
         lcd.setCursor(0,0);
-        lcd.print("Turning right, 50 cm");
-         
+        lcd.print("Turning right");
+        lcd.setCursor(0,1);
+        lcd.print("50 cm");
         Serial.println("Turning right");
         delay(1000);
     } 
@@ -125,7 +127,9 @@ void Drone::loop()
         lcd.backlight(); 
         lcd.clear();   
         lcd.setCursor(0,0);
-        lcd.print("Turning left, 50 cm");
+        lcd.print("Turning left");
+        lcd.setCursor(0,1);
+        lcd.print("50 cm");
         Serial.println("Turning left");
         delay(1000);
     }
@@ -138,7 +142,9 @@ void Drone::loop()
         lcd.backlight(); 
         lcd.clear();   
         lcd.setCursor(0,0);
-        lcd.print("Going back, 50 cm");
+        lcd.print("Going back");
+        lcd.setCursor(0,1);
+        lcd.print("50 cm");
         Serial.println("Turning back");
         delay(1000);
     } 
@@ -151,7 +157,9 @@ void Drone::loop()
         lcd.backlight(); 
         lcd.clear();   
         lcd.setCursor(0,0);
-        lcd.print("Going forward, 50 cm");
+        lcd.print("Going forward");
+        lcd.setCursor(0,1);
+        lcd.print("50 cm");
         Serial.println("Turning forward");
         delay(1000);
     }
