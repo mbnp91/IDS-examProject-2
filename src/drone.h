@@ -24,6 +24,7 @@ class Drone : public ButtonListener
         void loop();
         Joystick *joystick;
         bool flying = false;
+        
     private:
         void commandResponse(String response);
         String ssid;

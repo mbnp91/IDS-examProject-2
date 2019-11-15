@@ -2,6 +2,9 @@
 #include <drone.h>
 #include <joystick.h>
 #include <Position.h>
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+ 
 
 Drone::Drone(String ssid, String password)                                     //Constructor for our drone 
 {
@@ -12,6 +15,7 @@ Drone::Drone(String ssid, String password)                                     /
 
 void Drone::connect()
 {
+
     Serial.println("drone begin");
     //Serial.begin(9600);
     WiFi.mode(WIFI_STA);
@@ -64,6 +68,11 @@ void Drone::commandResponse(String response)
 
 void Drone::ButtonPressed()
 {
+    LiquidCrystal_I2C lcd(0x27,16,2);
+    lcd.init();
+    lcd.backlight(); 
+    //lcd.clear();   
+    lcd.setCursor(0,0); 
     pinMode(light, OUTPUT);
 
     if (flying == false)
@@ -71,12 +80,14 @@ void Drone::ButtonPressed()
         this->flying = true;
         Serial.println("takeoff");
         this->sendCommand("takeoff");
+        lcd.print("Taking off ");
         digitalWrite(light, HIGH);
     }
     else
     {
         Serial.println("land");
         this->sendCommand("land");
+        lcd.print("Landing");
         digitalWrite(light, LOW);
         this->flying = false;
     }
@@ -84,51 +95,65 @@ void Drone::ButtonPressed()
 
 void Drone::loop()
 {
-    
+    LiquidCrystal_I2C lcd(0x27,16,2);
+   
+
     // Using Position object to retrieve information
-    
     Position joystickPosition = this->joystick->getPosition();
+
    
     
     if (joystickPosition.x == 2047)
-        {
+    {
         this->sendCommand("right 50");
         Serial.println(joystickPosition.y);
+        lcd.init();
+        lcd.backlight(); 
+        lcd.clear();   
+        lcd.setCursor(0,0);
+        lcd.print("Turning right, 50 cm");
+         
         Serial.println("Turning right");
         delay(1000);
-        } 
-        else if (joystickPosition.x == -2048)
-        {
+    } 
+    
+    else if (joystickPosition.x == -2048)
+    {
         this->sendCommand("left 50");
         Serial.println(joystickPosition.y);
+        lcd.init();
+        lcd.backlight(); 
+        lcd.clear();   
+        lcd.setCursor(0,0);
+        lcd.print("Turning left, 50 cm");
         Serial.println("Turning left");
         delay(1000);
-        }
+    }
 
     if (joystickPosition.y == 2047)
-        {
+    {
         this->sendCommand("back 50");
         Serial.println(joystickPosition.y);
+        lcd.init();
+        lcd.backlight(); 
+        lcd.clear();   
+        lcd.setCursor(0,0);
+        lcd.print("Going back, 50 cm");
         Serial.println("Turning back");
         delay(1000);
-        } 
-        else if (joystickPosition.y == -2048){
-            this->sendCommand("forward 50");
+    } 
+
+    else if (joystickPosition.y == -2048)
+    {
+        this->sendCommand("forward 50");
         Serial.println(joystickPosition.y);
+        lcd.init();
+        lcd.backlight(); 
+        lcd.clear();   
+        lcd.setCursor(0,0);
+        lcd.print("Going forward, 50 cm");
         Serial.println("Turning forward");
         delay(1000);
-        }
-    
-    
-    
-    
-    /*
-    // Using joystick methods
-    Serial.print(this->joystick->getX());
-    Serial.print(" ");
-    Serial.println(this->joystick->getY());
-    */
-    
-    //sendmessage("joystickPosition")
+    }
 
 }
